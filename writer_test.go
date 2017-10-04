@@ -10,13 +10,13 @@ import (
 )
 
 func TestNewWriter(t *testing.T) {
-	var _ io.Writer = NewWriter(nil)
+	var _ io.Writer = NewWriter()
 }
 
 func TestSetOutputToWriter(t *testing.T) {
 	handler := memory.New()
 	alog.SetHandler(handler)
-	writer := NewWriter(handler)
+	writer := NewWriter()
 	log.SetOutput(writer)
 	log.Print("Hello!")
 	if len(handler.Entries) != 1 {
