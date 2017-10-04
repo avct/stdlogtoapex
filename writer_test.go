@@ -3,7 +3,6 @@ package stdlogtoapex
 import (
 	"io"
 	"log"
-	"regexp"
 	"testing"
 
 	alog "github.com/apex/log"
@@ -23,14 +22,11 @@ func TestSetOutputToWriter(t *testing.T) {
 	if len(handler.Entries) != 1 {
 		t.Fatal("No log message recorder in handler")
 	}
-	rx := "^[0-9]{4}/[0-9]{2}/[0-9]{2} [0-2][0-9]:[0-5][0-9]:[0-5][0-9] Hello!\n$"
+
 	entry := handler.Entries[0]
-	matched, err := regexp.MatchString(rx, entry.Message)
-	if err != nil {
-		t.Fatalf("Error matching regexp: %s", err)
-	}
-	if !matched {
-		t.Errorf("Expected log message %q to match regexp %q", entry.Message, rx)
+	expected := "Hello!\n"
+	if entry.Message != expected {
+		t.Errorf("Expected log message %q, got %q", expected, entry.Message)
 	}
 	if entry.Level != alog.InfoLevel {
 		t.Errorf("Expected to log at the default level (%s), but logged at %s.", alog.InfoLevel, entry.Level)
