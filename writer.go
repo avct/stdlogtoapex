@@ -18,6 +18,10 @@ type Writer struct {
 }
 
 func (w *Writer) stripDatePrefix(p []byte) string {
+	if w.prefixLen > len(p) {
+		// Safer to return the old value than trim all.
+		return string(p)
+	}
 	return string(p[w.prefixLen:])
 }
 
