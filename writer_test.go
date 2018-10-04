@@ -32,3 +32,44 @@ func TestSetOutputToWriter(t *testing.T) {
 		t.Errorf("Expected to log at the default level (%s), but logged at %s.", alog.InfoLevel, entry.Level)
 	}
 }
+
+func TestStripDatePrefix(t *testing.T) {
+	testCases := []struct {
+		data      []byte
+		prefixLen int
+		expected  string
+	}{
+		{
+			data:      []byte("Hello"),
+			prefixLen: 0,
+			expected:  "Hello",
+		},
+		{
+			data:      []byte("Hello"),
+			prefixLen: 1,
+			expected:  "ello",
+		},
+		{
+			data:      []byte("Hello"),
+			prefixLen: 5,
+			expected:  "",
+		},
+		{
+			data:      []byte("Hello"),
+			prefixLen: 6,
+			expected:  "Hello",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run("", func(t *testing.T) {
+			w := Writer{
+				prefixLen: tc.prefixLen,
+			}
+			s := w.stripDatePrefix(tc.data)
+			if s != tc.expected {
+				t.Fatalf("Expected %q, got %q", tc.expected, s)
+			}
+		})
+	}
+}
